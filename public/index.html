@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClinicQueue – University Health Clinic</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="brand" href="#" onclick="navigate('home')">ClinicQueue</a>
+  <div class="nav-links" id="nav-links">
+    <a href="#" onclick="navigate('home')">Home</a>
+    <a href="#" onclick="navigate('doctors')" id="nav-doctors">Doctors</a>
+    <a href="#" onclick="navigate('book')" id="nav-book" style="display:none">Book Appointment</a>
+    <a href="#" onclick="navigate('my-appointments')" id="nav-myappts" style="display:none">My Appointments</a>
+    <a href="#" onclick="navigate('admin')" id="nav-admin" style="display:none">Admin Panel</a>
+    <span id="nav-user"></span>
+    <button class="btn btn-outline btn-sm" id="btn-logout" style="display:none" onclick="API.logout()">Logout</button>
+    <a href="#" onclick="navigate('login')" id="btn-login" class="btn btn-white btn-sm">Login</a>
+    <a href="#" onclick="navigate('register')" id="btn-register" class="btn btn-accent btn-sm">Register</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Your Campus Health, Simplified</h1>
+    <p>Book appointments with university clinic doctors in seconds. No queues, no waiting rooms.</p>
+    <div class="hero-btns">
+      <button class="btn btn-white" onclick="navigate('register')">Get Started</button>
+      <button class="btn btn-outline" style="border-color:white;color:white" onclick="navigate('doctors')">View Doctors</button>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="stat-doctors">–</div><div class="stat-label">Doctors</div></div>
+    <div class="stat"><div class="stat-num" id="stat-slots">–</div><div class="stat-label">Open Slots Today</div></div>
+    <div class="stat"><div class="stat-num" id="stat-appts">–</div><div class="stat-label">Appointments Booked</div></div>
+    <div class="stat"><div class="stat-num">8am–5pm</div><div class="stat-label">Clinic Hours</div></div>
+  </div>
+  <div class="container">
+    <h2 class="section-title">Our Departments</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:.5rem"></div>
+        <div class="card-title">General Medicine</div>
+        <div class="card-sub">Consultations, diagnosis and treatment for common illnesses.</div>
+        <button class="btn btn-primary btn-sm" onclick="navigate('book')">Book Now</button>
+      </div>
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:.5rem"></div>
+        <div class="card-title">Dental Care</div>
+        <div class="card-sub">Oral health checkups, cleaning, and dental treatments.</div>
+        <button class="btn btn-primary btn-sm" onclick="navigate('book')">Book Now</button>
+      </div>
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:.5rem"></div>
+        <div class="card-title">Mental Health</div>
+        <div class="card-sub">Counseling and psychological support for student wellness.</div>
+        <button class="btn btn-primary btn-sm" onclick="navigate('book')">Book Now</button>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem">
+      <h2 class="section-title">How It Works</h2>
+      <div class="card-grid">
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;color:var(--primary);font-weight:800;margin-bottom:.5rem">1</div>
+          <div class="card-title">Register</div>
+          <div class="card-sub">Create your student account with your admission number.</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;color:var(--primary);font-weight:800;margin-bottom:.5rem">2</div>
+          <div class="card-title">Choose a Doctor</div>
+          <div class="card-sub">Browse available doctors and pick your preferred slot.</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;color:var(--primary);font-weight:800;margin-bottom:.5rem">3</div>
+          <div class="card-title">Show Up & Get Care</div>
+          <div class="card-sub">Visit the clinic at your booked time — no waiting needed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div class="page" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <h2>Welcome Back </h2>
+      <p>Sign in to manage your clinic appointments, view your medical history, and receive prescriptions online.</p>
+      <p style="margin-top:1.5rem;font-size:.9rem">Don't have an account? <a href="#" onclick="navigate('register')" style="color:#bfdbfe">Register here →</a></p>
+    </div>
+    <div class="auth-right">
+      <div class="form-card">
+        <div class="form-title">Student Login</div>
+        <div class="alert" id="login-alert"></div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="you@university.ac.ke" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" />
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div class="page" id="page-register">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <h2>Join ClinicQueue </h2>
+      <p>Register your student account to book appointments with clinic doctors anytime, from anywhere.</p>
+      <p style="margin-top:1.5rem;font-size:.9rem">Already registered? <a href="#" onclick="navigate('login')" style="color:#bfdbfe">Login here →</a></p>
+    </div>
+    <div class="auth-right">
+      <div class="form-card">
+        <div class="form-title">Student Registration</div>
+        <div class="alert" id="register-alert"></div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="reg-name" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="reg-email"  />
+        </div>
+        <div class="form-group">
+          <label>Admission Number</label>
+          <input type="text" id="reg-admission" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="reg-phone"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="reg-password" placeholder="Min. 6 characters" />
+        </div>
+        <button class="btn btn-accent" style="width:100%" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCTORS PAGE -->
+<div class="page" id="page-doctors">
+  <div class="container">
+    <h2 class="section-title">Our Doctors</h2>
+    <div class="card-grid" id="doctors-list"><p>Loading doctors...</p></div>
+  </div>
+</div>
+
+<!-- BOOK APPOINTMENT PAGE -->
+<div class="page" id="page-book">
+  <div class="container" style="max-width:600px">
+    <h2 class="section-title">Book an Appointment</h2>
+    <div class="card">
+      <div class="alert" id="book-alert"></div>
+      <div class="form-group">
+        <label>Select Doctor</label>
+        <select id="book-doctor" onchange="loadSlots()">
+          <option value="">— Choose a doctor —</option>
+        </select>
+      </div>
+      <div class="form-group" id="slots-group" style="display:none">
+        <label>Available Time Slots</label>
+        <select id="book-slot">
+          <option value="">— Choose a slot —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Reason for Visit</label>
+        <textarea id="book-reason" placeholder="Briefly describe your symptoms or reason for visiting..."></textarea>
+      </div>
+      <button class="btn btn-accent" style="width:100%" onclick="doBook()">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY APPOINTMENTS PAGE -->
+<div class="page" id="page-my-appointments">
+  <div class="container">
+    <h2 class="section-title">My Appointments</h2>
+    <div id="my-appts-list">Loading...</div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL PAGE -->
+<div class="page" id="page-admin">
+  <div class="container">
+    <h2 class="section-title">Admin Panel</h2>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tab-all-appts', this)">All Appointments</button>
+      <button class="tab" onclick="switchTab('tab-doctors-mgmt', this)">Manage Doctors</button>
+      <button class="tab" onclick="switchTab('tab-slots-mgmt', this)">Add Slots</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-all-appts">
+      <div id="admin-appts-wrap">Loading...</div>
+    </div>
+
+    <div class="tab-panel" id="tab-doctors-mgmt">
+      <div class="card" style="max-width:480px;margin-bottom:1.5rem">
+        <div class="form-title" style="font-size:1rem">Add New Doctor</div>
+        <div class="alert" id="add-doctor-alert"></div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="doc-name" placeholder="DR........" />
+        </div>
+        <div class="form-group">
+          <label>Specialization</label>
+          <select id="doc-spec">
+            <option value="General Medicine">General Medicine</option>
+            <option value="Dental">Dental</option>
+            <option value="Mental Health">Mental Health</option>
+            <option value="Physiotherapy">Physiotherapy</option>
+            <option value="Nutrition">Nutrition</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Available Days (e.g. Mon,Wed,Fri)</label>
+          <input type="text" id="doc-days" placeholder="Mon,Tue,Wed,Thu,Fri" />
+        </div>
+        <div class="form-group">
+          <label>Short Bio</label>
+          <textarea id="doc-bio" placeholder="Doctor's background and expertise..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="doAddDoctor()">Add Doctor</button>
+      </div>
+      <h3 style="margin-bottom:.8rem;color:var(--primary-dark)">Current Doctors</h3>
+      <div id="admin-doctors-list">Loading...</div>
+    </div>
+
+    <div class="tab-panel" id="tab-slots-mgmt">
+      <div class="card" style="max-width:480px">
+        <div class="form-title" style="font-size:1rem">Add Time Slot for Doctor</div>
+        <div class="alert" id="add-slot-alert"></div>
+        <div class="form-group">
+          <label>Doctor</label>
+          <select id="slot-doctor-id">
+            <option value="">— Select doctor —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="slot-date" />
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" id="slot-time" />
+        </div>
+        <button class="btn btn-accent" onclick="doAddSlot()">Add Slot</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Update Status -->
+<div class="modal-overlay" id="modal-status">
+  <div class="modal">
+    <div class="modal-title">Update Appointment</div>
+    <input type="hidden" id="modal-appt-id" />
+    <div class="form-group">
+      <label>Status</label>
+      <select id="modal-status-val">
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Doctor Notes (optional)</label>
+      <textarea id="modal-notes" placeholder="Notes or diagnosis summary..."></textarea>
+    </div>
+    <div style="display:flex;gap:.8rem;margin-top:.5rem">
+      <button class="btn btn-primary" onclick="doUpdateStatus()">Save</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-status')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Prescription -->
+<div class="modal-overlay" id="modal-prescription">
+  <div class="modal">
+    <div class="modal-title">Add Prescription</div>
+    <input type="hidden" id="rx-appt-id" />
+    <div class="form-group">
+      <label>Medication</label>
+      <input type="text" id="rx-medication" placeholder="e.g. Paracetamol 500mg" />
+    </div>
+    <div class="form-group">
+      <label>Dosage</label>
+      <input type="text" id="rx-dosage" placeholder="e.g. 1 tablet twice daily" />
+    </div>
+    <div class="form-group">
+      <label>Duration</label>
+      <input type="text" id="rx-duration" placeholder="e.g. 5 days" />
+    </div>
+    <div style="display:flex;gap:.8rem;margin-top:.5rem">
+      <button class="btn btn-accent" onclick="doAddPrescription()">Save Prescription</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-prescription')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
